@@ -73,6 +73,7 @@ class Roadmap(models.Model):
     roadmap_id = models.AutoField(primary_key=True)
     roadmap_title = models.CharField(max_length=25)
     roadmap_description = models.TextField()
+    roadmap_students = models.ManyToManyField(Student) # One student can have many roadmaps, and one roadmap can have many students
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
