@@ -13,5 +13,4 @@ def roadmap_list(request):
     # render syntax: 
     # render(HTTP request object, 
     # html file in templates directory, 
-    # dictionary of data to pass to the template ({variable_name : roadmaps list}) )
-
+    # dictionary of data to pass to the template {variable_name : roadmaps list} )
