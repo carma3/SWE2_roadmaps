@@ -76,6 +76,8 @@ class Roadmap(models.Model):
     roadmap_students = models.ManyToManyField(Student) # One student can have many roadmaps, and one roadmap can have many students
     created_at = models.DateTimeField(auto_now_add=True)
 
+    metadata = models.JSONField(default=dict)
+
     def __str__(self):
         return self.roadmap_title
 

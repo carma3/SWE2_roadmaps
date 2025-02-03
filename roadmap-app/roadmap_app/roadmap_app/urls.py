@@ -21,7 +21,8 @@ from roadmaps import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.home, name="home"),
-    path("roadmaps/", views.roadmap_list, name="roadmap list")
+    path("roadmaps/", views.roadmap_list, name="roadmap_list"),
+    path("create-roadmap/", views.create_roadmap, name="create_roadmap")
 ]
 
 # Path syntax: path(URL route pattern, view function that should handle request, unique identifier (optional))
