@@ -8,15 +8,21 @@ import json
 def home(request):
     return HttpResponse("Home Page!")
 
+
+# List roadmaps page
 def roadmap_list(request):
     roadmaps = Roadmap.objects.all() # Gets all roadmaps from the db
-    return render(request, 'roadmap_list.html', {"roadmaps" : roadmaps})
+    return render(request, 'roadmaps/roadmap_list.html', {"roadmaps" : roadmaps})
     # render syntax: 
     # render(HTTP request object, 
     # html file in templates directory, 
     # dictionary of data to pass to the template {variable_name : roadmaps list} )
 
+# Create roadmap page
+def create_roadmap_form(request):
+    return render(request, 'roadmaps/create-roadmap-form.html')
 
+# Create roadmap post request
 def create_roadmap(request):
     """
     Takes JSON data from front end and creates the object in the DB

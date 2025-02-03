@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.home, name="home"),
     path("roadmaps/", views.roadmap_list, name="roadmap_list"),
+    path("roadmaps/create-roadmap-form", views.create_roadmap_form, name="create_roadmap_form"),
     path("create-roadmap/", views.create_roadmap, name="create_roadmap")
 ]
 
