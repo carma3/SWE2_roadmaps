@@ -51,6 +51,7 @@ class ClassGroup(models.Model):
     group_name = models.CharField(max_length=25)
     group_instructor = models.OneToOneField(Instructor, on_delete=models.DO_NOTHING) # One class group has one instructor
     group_student = models.ManyToManyField(Student) # N students can be a part of M classes
+    group_join_code = models.CharField(unique=True, max_length=5, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -86,6 +87,8 @@ class Attachment(models.Model):
     attachment_id = models.AutoField(primary_key=True)
     attachment_roadmap = models.ForeignKey(Roadmap, on_delete=models.DO_NOTHING) # One roadmap has many attachments
     attachment_name = models.CharField(max_length=75)
+
+    attachment_metadata = models.FileField(null=True)
 
     def __str__(self):
         return self.attachment_name
