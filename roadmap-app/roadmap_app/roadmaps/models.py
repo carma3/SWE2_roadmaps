@@ -46,16 +46,16 @@ class Ticket(models.Model):
         return self.ticket_title
 
 
-class ClassGroup(models.Model):
+class Class(models.Model):
     group_id = models.AutoField(primary_key=True)
-    group_name = models.CharField(max_length=25)
-    group_instructor = models.OneToOneField(Instructor, on_delete=models.DO_NOTHING) # One class group has one instructor
-    group_student = models.ManyToManyField(Student) # N students can be a part of M classes
-    group_join_code = models.CharField(unique=True, max_length=5, null=True)
+    class_name = models.CharField(max_length=25)
+    class_instructor = models.OneToOneField(Instructor, on_delete=models.DO_NOTHING) # One class group has one instructor
+    class_student = models.ManyToManyField(Student) # N students can be a part of M classes
+    class_join_code = models.CharField(unique=True, max_length=5, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.group_name
+        return self.class_name
 
 
 
@@ -63,7 +63,7 @@ class Project(models.Model):
     project_id = models.AutoField(primary_key=True)
     project_title = models.CharField(max_length=25)
     project_instructor = models.ForeignKey(Instructor, on_delete=models.DO_NOTHING)
-    group_id = models.ManyToManyField(ClassGroup) # Many projects linked to many class groups
+    group_id = models.ManyToManyField(Class) # Many projects linked to many class groups
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
