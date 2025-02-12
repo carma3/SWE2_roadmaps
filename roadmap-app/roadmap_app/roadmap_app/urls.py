@@ -21,9 +21,11 @@ from roadmaps import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.home, name="home"),
-    path("roadmaps/", views.roadmap_list, name="roadmap_list"),
-    path("roadmaps/create-roadmap-form", views.create_roadmap_form, name="create_roadmap_form"),
-    path("create-roadmap/", views.create_roadmap, name="create_roadmap")
+    path("login/", views.login_view, name="login"),
+    path("signup/", views.signup, name="signup"),
+    path("pages/dashboard", views.dashboard, name="dashboard"),
 ]
 
-# Path syntax: path(URL route pattern, view function that should handle request, unique identifier (optional))
+# Path syntax: path(URL route pattern (not necessarily path within templates, just url to follow in browser to get to view), 
+# view function that should handle request (calls render() which loads .php), 
+# unique identifier (optional))
