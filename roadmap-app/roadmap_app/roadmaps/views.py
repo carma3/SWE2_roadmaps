@@ -22,6 +22,7 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
+            request.session['username'] = username
             return redirect("dashboard")  # Redirect to a protected page
         else:
             messages.error(request, "Invalid username or password")
@@ -32,12 +33,15 @@ def login_view(request):
 
 
 def signup_view(request):
+    # If we post, populate the form with the post data, make sure it is valid, then save the new user,
+    # log in, and redirect to their dashboard
     if request.method == "POST":
         form = SignUpForm(request.POST)
 
         if form.is_valid():
             user = form.save() # Save new AppUser in database with posted data
-            login(request, user) # 
+            login(request, user) # Login and redirect to dashboard (save session data in request)
+            request.session['username'] = request.POST['username']
             messages.success(request, "Account created successfully!")
             return redirect('roadmaps/pages/dashboard.php')
 
@@ -49,6 +53,12 @@ def signup_view(request):
     # After setting "form" to SignUpForm, render the html page and
     # send it the form data under the alias 'form'
     return render(request, 'roadmaps/signup.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)
+
+    return redirect('login')
 
 def dashboard(request):
     return render(request, 'roadmaps/pages/dashboard.php')
@@ -71,29 +81,4 @@ def create_roadmap(request):
     """
     Takes JSON data from front end and creates the object in the DB
     """
-
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body) # Get the JSON from the request
-
-            # Create roadmap with initial data
-            roadmap = Roadmap.objects.create(
-                roadmap_title=data.get("title"),
-                roadmap_description=data.get("description")
-            )
-
-            student_ids = data.get("roadmap_students", []) # Get the student IDs from the JSON
-            students = AppUser.objects.filter(id__in=student_ids)  # Retrieve students objects by IDs
-            roadmap.roadmap_students.set(students)  # Associate students with the 
-            
-            roadmap.metadata.set(data)
-
-            return JsonResponse(
-                {"message": "Roadmap created successfully", "roadmap_id": roadmap.roadmap_id},
-                status=201
-            )
-        
-        except Exception as ex:
-            return JsonResponse({"Error:" : str(ex)}, status=400)
-
-    return JsonResponse({"Error" : "Invalid Request"}, status=405)
+    pass

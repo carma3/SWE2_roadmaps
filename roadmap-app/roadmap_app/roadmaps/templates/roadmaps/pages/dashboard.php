@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
+    header("Location: index.html");
     exit();
 }
 ?>
@@ -19,7 +19,7 @@ if (!isset($_SESSION['username'])) {
 <body>
     <div class="dashboard-container">
         <h2>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h2>
-        <a href="logout.php">Logout</a>
+        <a href="{% url 'logout' %}">Logout</a>
     </div>
 </body>
 
