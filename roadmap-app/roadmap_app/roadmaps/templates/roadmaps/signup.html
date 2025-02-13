@@ -1,0 +1,15 @@
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }} <!-- Automatically renders 'form' fields with labels in <p> elements -->
+    <button type="submit">Sign Up</button>
+</form>
+
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>

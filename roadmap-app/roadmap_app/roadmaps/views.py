@@ -1,16 +1,18 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from .models import Roadmap, Student
+from .models import Roadmap, AppUser
+from django.contrib.auth.models import User
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from .forms import SignUpForm
 
 # Create your views here.
 
 def home(request):
     return HttpResponse("Home Page!")
 
-# Get the username and password from index.html POST and authenticate against User table from django
+# Get the username and password from index.html POST and authenticate against User table
 def login_view(request):
     # When index.html posts to itself, authenticate and redirect if successful
     if request.method == "POST":
@@ -29,10 +31,22 @@ def login_view(request):
 
 
 
-def signup(request):
+def signup_view(request):
+    if request.method == "POST":
+        fname = request.POST["fname"]
+        lname = request.POST["lname"]
+        email = request.POST["username"]
+        password = request.POST["password"]
+        confirm_password = request.POST["confirm_password"]
 
+    else:
+        form = SignUpForm()
 
-    return render(request, 'roadmaps/signup.php')
+    
+
+    # After setting "form" to SignUpForm, render the html page and
+    # send it the form data under the alias 'form'
+    return render(request, 'roadmaps/signup.html', {'form': form})
 
 def dashboard(request):
     return render(request, 'roadmaps/pages/dashboard.php')
@@ -67,7 +81,7 @@ def create_roadmap(request):
             )
 
             student_ids = data.get("roadmap_students", []) # Get the student IDs from the JSON
-            students = Student.objects.filter(id__in=student_ids)  # Retrieve students objects by IDs
+            students = AppUser.objects.filter(id__in=student_ids)  # Retrieve students objects by IDs
             roadmap.roadmap_students.set(students)  # Associate students with the 
             
             roadmap.metadata.set(data)

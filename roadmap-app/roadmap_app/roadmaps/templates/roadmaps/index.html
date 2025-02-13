@@ -12,10 +12,21 @@
     <div class="login-container">
         <h2>Login</h2>
         <form action="{% url 'login' %}" method="POST"> <!-- "{% url 'login' %}" refers to the url for the view named "login" in url.py -->
+            {% csrf_token %} <!-- Django XSS prevention token -->
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
+    </div>
+
+    <div>
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </div>
 </body>
 
