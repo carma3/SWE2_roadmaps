@@ -33,11 +33,13 @@ def login_view(request):
 
 def signup_view(request):
     if request.method == "POST":
-        fname = request.POST["fname"]
-        lname = request.POST["lname"]
-        email = request.POST["username"]
-        password = request.POST["password"]
-        confirm_password = request.POST["confirm_password"]
+        form = SignUpForm(request.POST)
+
+        if form.is_valid():
+            user = form.save() # Save new AppUser in database with posted data
+            login(request, user) # 
+            messages.success(request, "Account created successfully!")
+            return redirect('roadmaps/pages/dashboard.php')
 
     else:
         form = SignUpForm()

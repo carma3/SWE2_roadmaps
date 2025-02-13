@@ -42,7 +42,7 @@ class Project(models.Model):
     project_id = models.AutoField(primary_key=True)
     project_title = models.CharField(max_length=25)
     project_instructor = models.ForeignKey(AppUser, on_delete=models.DO_NOTHING)
-    group_id = models.ManyToManyField(Class) # Many projects linked to many class groups
+    class_id = models.ManyToManyField(Class) # Many projects linked to many classes
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from .models import AppUser
 from django.contrib.auth.forms import UserCreationForm
 
 # forms.py handles form validation and structure and can be called
@@ -11,5 +11,5 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        model = AppUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'role']
