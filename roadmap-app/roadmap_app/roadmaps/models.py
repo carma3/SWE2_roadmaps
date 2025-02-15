@@ -26,8 +26,8 @@ class Ticket(models.Model):
 
 
 class Class(models.Model):
-    group_id = models.AutoField(primary_key=True)
     class_name = models.CharField(max_length=25)
+    class_desc = models.TextField(max_length=300, default="")
     class_instructor = models.ForeignKey(AppUser, on_delete=models.DO_NOTHING, related_name="instructor_classes") # One class has one instructor
     class_student = models.ManyToManyField(AppUser, related_name="student_classes") # N students can be a part of M classes
     class_join_code = models.CharField(unique=True, max_length=5, null=True)

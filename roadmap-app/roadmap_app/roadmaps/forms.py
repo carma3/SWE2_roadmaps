@@ -1,5 +1,5 @@
 from django import forms
-from .models import AppUser
+from .models import AppUser, Class
 from django.contrib.auth.forms import UserCreationForm
 
 # forms.py handles form validation and structure and can be called
@@ -13,3 +13,8 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = AppUser
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'role']
+
+class CreateClassForm(forms.ModelForm):
+    class Meta:
+        model = Class
+        fields = ["class_name", "class_desc", "class_student"]

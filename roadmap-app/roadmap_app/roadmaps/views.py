@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import SignUpForm
+from .forms import SignUpForm, CreateClassForm
 
 # Create your views here.
 
@@ -48,8 +48,6 @@ def signup_view(request):
     else:
         form = SignUpForm()
 
-    
-
     # After setting "form" to SignUpForm, render the html page and
     # send it the form data under the alias 'form'
     return render(request, 'roadmaps/signup.html', {'form': form})
@@ -63,22 +61,40 @@ def logout_view(request):
 def dashboard(request):
     return render(request, 'roadmaps/pages/dashboard.php')
 
-# List roadmaps page
-def roadmap_list(request):
-    roadmaps = Roadmap.objects.all() # Gets all roadmaps from the db
-    return render(request, 'roadmaps/roadmap_list.html', {"roadmaps" : roadmaps})
-    # render syntax: 
-    # render(HTTP request object, 
-    # html file in templates directory, 
-    # dictionary of data to pass to the template {variable_name : roadmaps list} )
+# List roadmaps code (to be used on dashboard)
+
+# roadmaps = Roadmap.objects.all() # Gets all roadmaps from the db
+# return render(request, 'roadmaps/roadmap_list.html', {"roadmaps" : roadmaps})
+
+
+def create_class_view(request):
+    if request.method == "POST":
+        form = CreateClassForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('roadmaps/pages/dashboard.php')
+        
+    else:
+        form = CreateClassForm()
+
+
+    return render(request, "roadmaps/pages/create_class.php", {"form":form})
+
 
 # Create roadmap page
 def create_roadmap_form(request):
     return render(request, 'roadmaps/create-roadmap-form.html')
 
-# Create roadmap post request
-def create_roadmap(request):
-    """
-    Takes JSON data from front end and creates the object in the DB
-    """
-    pass
+
+def roadmap_view(request):
+    if request.method == "POST":
+        pass
+
+    
+
+
+# render function syntax: 
+# render(HTTP request object, 
+# html file in templates directory, 
+# dictionary of data to pass to the template {variable_name : roadmaps list} )
