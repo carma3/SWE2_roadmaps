@@ -59,7 +59,7 @@ def logout_view(request):
     return redirect('login')
 
 def dashboard(request):
-    return render(request, 'roadmaps/pages/dashboard.php', {"username": request.session['username']})
+    return render(request, 'roadmaps/pages/dashboard.php', {"username": request.session['username'], "classes" : Class.objects.all()})
 
 # List roadmaps code (to be used on dashboard)
 
@@ -90,7 +90,7 @@ def create_class_view(request):
 
             messages.success(request, f"Class created successfully. Class code: {class_code}")
 
-            
+
 
             return render(request, "roadmaps/pages/create_class.php", {"form":form})
         

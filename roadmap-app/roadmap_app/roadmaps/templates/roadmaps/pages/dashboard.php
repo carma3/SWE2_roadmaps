@@ -12,6 +12,15 @@
     <div class="dashboard-container">
         <h2>Welcome, {{ username }}!</h2>
         <a href="{% url 'logout' %}">Logout</a>
+
+        {% if classes %}
+        <h3>Your classes:</h3>
+    <ul>
+        {% for class_ in classes %}
+        <li>{{ class_ }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     </div>
 </body>
 
