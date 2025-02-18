@@ -10,7 +10,7 @@ from .forms import SignUpForm, CreateClassForm
 # Create your views here.
 
 def home(request):
-    return HttpResponse("Home Page!")
+    return render(request, 'roadmaps/home.html')
 
 # Get the username and password from index.html POST and authenticate against User table
 def login_view(request):
