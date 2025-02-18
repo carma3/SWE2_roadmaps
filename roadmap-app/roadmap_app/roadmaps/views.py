@@ -62,7 +62,6 @@ def dashboard(request):
     return render(request, 'roadmaps/pages/dashboard.php', {"username": request.session['username'], "classes" : Class.objects.all()})
 
 # List roadmaps code (to be used on dashboard)
-
 # roadmaps = Roadmap.objects.all() # Gets all roadmaps from the db
 # return render(request, 'roadmaps/roadmap_list.html', {"roadmaps" : roadmaps})
 
