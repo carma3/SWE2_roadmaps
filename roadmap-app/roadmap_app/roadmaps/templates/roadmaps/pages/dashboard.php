@@ -1,11 +1,3 @@
-<?php
-session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: index.html");
-    exit();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +10,7 @@ if (!isset($_SESSION['username'])) {
 
 <body>
     <div class="dashboard-container">
-        <h2>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h2>
+        <h2>Welcome, {{ username }}!</h2>
         <a href="{% url 'logout' %}">Logout</a>
     </div>
 </body>

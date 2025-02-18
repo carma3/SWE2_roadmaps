@@ -1,10 +1,15 @@
-<html>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }} <!-- Automatically renders 'form' fields with labels in <p> elements -->
+    <button type="submit">Create</button>
+</form>
 
-<body>
-    <p>
-        Create roadmap form (placeholder)
-    </p>
-</body>
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 
-
-</html>
+<p><a href="{% url 'dashboard' %}">Back</a></p>

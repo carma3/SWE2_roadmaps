@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from .models import Roadmap, AppUser
+from .models import Roadmap, AppUser, Class
 from django.contrib.auth.models import User
 import json
 from django.contrib.auth import authenticate, login, logout
@@ -43,7 +43,7 @@ def signup_view(request):
             login(request, user) # Login and redirect to dashboard (save session data in request)
             request.session['username'] = request.POST['username']
             messages.success(request, "Account created successfully!")
-            return redirect('roadmaps/pages/dashboard.php')
+            return redirect('../roadmaps/pages/dashboard.php')
 
     else:
         form = SignUpForm()
@@ -59,7 +59,7 @@ def logout_view(request):
     return redirect('login')
 
 def dashboard(request):
-    return render(request, 'roadmaps/pages/dashboard.php')
+    return render(request, 'roadmaps/pages/dashboard.php', {"username": request.session['username']})
 
 # List roadmaps code (to be used on dashboard)
 
@@ -72,8 +72,27 @@ def create_class_view(request):
         form = CreateClassForm(request.POST)
 
         if form.is_valid():
-            form.save()
-            return redirect('roadmaps/pages/dashboard.php')
+
+            # TODO: Generate class code and verify against db
+            class_code = "12345"
+
+            class_name = form.cleaned_data['class_name']
+            class_desc = form.cleaned_data['class_desc']
+
+            new_class = Class (
+                class_name=class_name,
+                class_desc=class_desc,
+                class_instructor=AppUser.objects.filter(username=request.session['username'])[0],
+                class_join_code=class_code
+            )
+
+            new_class.save()
+
+            messages.success(request, f"Class created successfully. Class code: {class_code}")
+
+            
+
+            return render(request, "roadmaps/pages/create_class.php", {"form":form})
         
     else:
         form = CreateClassForm()
