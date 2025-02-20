@@ -17,7 +17,8 @@ class SignUpForm(UserCreationForm):
 class CreateClassForm(forms.ModelForm):
     class_name = forms.CharField(max_length=30, required=True)
     class_desc = forms.CharField(max_length=160, required=True)
-    
+
+    # TODO: Change password requirements
 
     class Meta:
         model = Class
