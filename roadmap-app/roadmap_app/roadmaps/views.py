@@ -3,9 +3,11 @@ from django.http import HttpResponse, JsonResponse
 from .models import Roadmap, AppUser, Class
 from django.contrib.auth.models import User
 import json
+from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm, CreateClassForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -58,7 +60,9 @@ def logout_view(request):
 
     return redirect('login')
 
+@login_required(login_url='login')
 def dashboard(request):
+
     return render(request, 'roadmaps/pages/dashboard.php', {"username": request.session['username'], "classes" : Class.objects.all()})
 
 # List roadmaps code (to be used on dashboard)
