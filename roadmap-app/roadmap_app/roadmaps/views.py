@@ -43,7 +43,7 @@ def signup_view(request):
             login(request, user) # Login and redirect to dashboard (save session data in request)
             request.session['username'] = request.POST['username']
             messages.success(request, "Account created successfully!")
-            return redirect('../roadmaps/pages/dashboard.php')
+            return redirect('../pages/dashboard')
 
     else:
         form = SignUpForm()

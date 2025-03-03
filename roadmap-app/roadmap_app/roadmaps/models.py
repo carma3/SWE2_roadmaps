@@ -16,7 +16,6 @@ class AppUser(AbstractUser):
 
 
 class Ticket(models.Model):
-    ticket_id = models.AutoField(primary_key=True)
     ticket_title = models.CharField(max_length=50)
     ticket_description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -39,7 +38,6 @@ class Class(models.Model):
 
 
 class Project(models.Model):
-    project_id = models.AutoField(primary_key=True)
     project_title = models.CharField(max_length=25)
     project_instructor = models.ForeignKey(AppUser, on_delete=models.DO_NOTHING)
     class_id = models.ManyToManyField(Class) # Many projects linked to many classes
@@ -50,7 +48,6 @@ class Project(models.Model):
 
 
 class Roadmap(models.Model):
-    roadmap_id = models.AutoField(primary_key=True)
     roadmap_title = models.CharField(max_length=25)
     roadmap_description = models.TextField()
     roadmap_students = models.ManyToManyField(AppUser) # One student can have many roadmaps, and one roadmap can have many students
@@ -63,7 +60,6 @@ class Roadmap(models.Model):
 
 
 class Attachment(models.Model):
-    attachment_id = models.AutoField(primary_key=True)
     attachment_roadmap = models.ForeignKey(Roadmap, on_delete=models.DO_NOTHING) # One roadmap has many attachments
     attachment_name = models.CharField(max_length=75)
 
