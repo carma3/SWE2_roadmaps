@@ -25,7 +25,8 @@ urlpatterns = [
     path("signup/", views.signup_view, name="signup"),
     path("pages/dashboard", views.dashboard, name="dashboard"),
     path("pages/logout", views.logout_view, name="logout"),
-    path("pages/dashboard/create-class", views.create_class_view, name="create_class")
+    path("pages/dashboard/create-class", views.create_class_view, name="create_class"),
+    path("pages/dashboard/create-roadmap", views.create_roadmap_form, name="create_roadmap")
 ]
 
 # Path syntax: path(URL route pattern (not necessarily path within templates, just url to follow in browser to get to view), 

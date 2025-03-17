@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from .models import Roadmap, AppUser, Class
 from django.contrib.auth.models import User
@@ -6,7 +6,7 @@ import json
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import SignUpForm, CreateClassForm
+from .forms import SignUpForm, CreateClassForm, CreateRoadmapForm
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -105,8 +105,36 @@ def create_class_view(request):
 
 
 # Create roadmap page
-def create_roadmap_form(request):
-    return render(request, 'roadmaps/create-roadmap-form.html')
+def create_roadmap_form(request, class_id=None):
+    if request.method == "POST":
+        form = CreateRoadmapForm(request.POST)
+
+        if form.is_valid():
+            roadmap_name = form.cleaned_data['roadmap_title']
+            roadmap_desc = form.cleaned_data['roadmap_description']
+            roadmap_students = form.cleaned_data['roadmap_students']
+
+            new_map = Roadmap (
+                class_name=roadmap_name,
+                roadmap_desc=roadmap_desc
+            )
+
+            new_map.save()
+
+            messages.success(request, "Class created successfully. Class code:")
+
+            return render(request, "roadmaps/pages/create-roadmap-form.html", {"form":form})
+        
+    else:
+        class_id = 0
+        form = CreateRoadmapForm()
+        class_instance = get_object_or_404(Class, id=class_id)
+        students = class_instance.class_student.all().values('id', 'username')
+
+        print(students)
+
+
+    return render(request, "roadmaps/pages/create-roadmap-form.html", {"form":form, "_class":_class})
 
 
 def roadmap_view(request):
