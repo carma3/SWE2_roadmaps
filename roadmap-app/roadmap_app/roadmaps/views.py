@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from .models import Roadmap, AppUser, Class
 from django.contrib.auth.models import User
 import json
+import random, string
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -24,7 +25,12 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
+
+            usertype = user.role
+
             request.session['username'] = username
+            request.session['usertype'] = usertype
+
             return redirect("dashboard")  # Redirect to a protected page
         else:
             messages.error(request, "Invalid username or password")
@@ -44,6 +50,8 @@ def signup_view(request):
             user = form.save() # Save new AppUser in database with posted data
             login(request, user) # Login and redirect to dashboard (save session data in request)
             request.session['username'] = request.POST['username']
+            request.session['usertype'] = request.POST['role']
+
             messages.success(request, "Account created successfully!")
             return redirect('../pages/dashboard')
 
@@ -57,8 +65,8 @@ def signup_view(request):
 
 def logout_view(request):
     logout(request)
-
     return redirect('login')
+
 
 @login_required(login_url='login')
 def dashboard(request):
@@ -69,15 +77,35 @@ def dashboard(request):
 # roadmaps = Roadmap.objects.all() # Gets all roadmaps from the db
 # return render(request, 'roadmaps/roadmap_list.html', {"roadmaps" : roadmaps})
 
-
+@login_required(login_url='login')
 def create_class_view(request):
+    if request.session["usertype"] == "student":
+        return redirect("dashboard")
+
+    def get_unique_code():
+        code = None
+        
+        while code == None:
+            characters = string.ascii_letters + string.digits
+            code = ''.join(random.choices(characters, k=5))
+
+            _class = Class.objects.filter(class_join_code=code)
+
+            if _class:
+                code == None
+
+        return code
+
+
     if request.method == "POST":
         form = CreateClassForm(request.POST)
 
         if form.is_valid():
 
             # TODO: Generate class code and verify against db
-            class_code = "12345"
+            class_code = get_unique_code()
+
+            print(class_code)
 
             class_name = form.cleaned_data['class_name']
             class_desc = form.cleaned_data['class_desc']
@@ -94,18 +122,21 @@ def create_class_view(request):
             messages.success(request, f"Class created successfully. Class code: {class_code}")
 
 
-
-            return render(request, "roadmaps/pages/create_class.php", {"form":form})
+            return render(request, "roadmaps/pages/create_class.html", {"form":form})
         
     else:
         form = CreateClassForm()
 
 
-    return render(request, "roadmaps/pages/create_class.php", {"form":form})
+    return render(request, "roadmaps/pages/create_class.html", {"form":form})
 
 
 # Create roadmap page
-def create_roadmap_form(request, class_id=None):
+@login_required(login_url='login')
+def create_roadmap_form(request, class_id=0):
+    if request.session["usertype"] == "student":
+        return redirect("dashboard")
+
     if request.method == "POST":
         form = CreateRoadmapForm(request.POST)
 
@@ -126,17 +157,25 @@ def create_roadmap_form(request, class_id=None):
             return render(request, "roadmaps/pages/create-roadmap-form.html", {"form":form})
         
     else:
-        class_id = 0
+        class_id = 6
         form = CreateRoadmapForm()
-        class_instance = get_object_or_404(Class, id=class_id)
-        students = class_instance.class_student.all().values('id', 'username')
+        class_instance = Class.objects.get(id=class_id)
 
-        print(students)
+        print(Class.objects.all())
+
+        if not class_instance:
+            students = None
+
+        else:
+            students = class_instance.class_student.all().values('id', 'username')
+
+            print(students)
 
 
-    return render(request, "roadmaps/pages/create-roadmap-form.html", {"form":form, "_class":_class})
+    return render(request, "roadmaps/pages/create-roadmap-form.html", {"form":form, "class_instance":class_instance, "students":students})
 
 
+@login_required(login_url='login')
 def roadmap_view(request):
     if request.method == "POST":
         pass

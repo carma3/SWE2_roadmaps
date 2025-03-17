@@ -14,22 +14,32 @@
 
 <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }} <!-- Automatically renders 'form' fields with labels in <p> elements -->
 
+    <label for="roadmap_title">Roadmap Title:</label>
+    <input type="text" name="roadmap_title" id="roadmap_title" required>
+    
+    <label for="roadmap_description">Roadmap Description:</label>
+    <textarea name="roadmap_description" id="roadmap_description" required></textarea>
 
-
+    {% if class_instance %}
     <h2>Students in {{ class_instance.class_name }}</h2>
-    <ul>
-        {% for student in students %}
-        <li>ID: {{ student.id }} - Name: {{ student.username }}</li>
-        {% empty %}
-        <li>No students enrolled.</li>
-        {% endfor %}
-    </ul>
+        {% csrf_token %}
+
+        <ul>
+            {% for student in students %}
+            <li>
+                <input type="checkbox" name="selected_students" value="{{ student.id }}">
+                {{ student.username }}
+            </li>
+            {% empty %}
+            <li>No students enrolled.</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
 
 
-
+    <div></div>
     <a href="{% url 'dashboard' %}" class="button">Back</a>
     <button class="button" type="submit">Create</button>
 </form>
