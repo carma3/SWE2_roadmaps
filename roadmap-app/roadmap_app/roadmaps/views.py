@@ -169,6 +169,7 @@ def create_roadmap_form(request):
     if request.session["usertype"] == "student":
         return redirect("dashboard")
     
+    class_id = 6 # Replace this with class ID selected from previous page
     class_instance = Class.objects.get(id=class_id)
 
     if request.method == "POST":
