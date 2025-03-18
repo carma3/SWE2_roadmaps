@@ -100,12 +100,12 @@ def join_class_view(request):
 def dashboard(request):
     # Student view
     if request.session["usertype"] == "student":
-        return render(request, 'roadmaps/pages/student_dashboard.html', {"username": request.session['username'], "classes" : Class.objects.filter()})
+        return render(request, 'roadmaps/pages/dashboard.html', {"username": request.session['username'], "classes" : Class.objects.filter(), "student": True})
 
     
     # Instructor view
     elif request.session["usertype"] == "instructor":
-        return render(request, 'roadmaps/pages/instructor_dashboard.html', {"username": request.session['username'], "classes" : Class.objects.filter(class_instructor=AppUser.objects.get(id=request.session['user_id']))})
+        return render(request, 'roadmaps/pages/dashboard.html', {"username": request.session['username'], "classes" : Class.objects.filter(class_instructor=AppUser.objects.get(id=request.session['user_id'])), "student": False})
 
 
 
@@ -215,6 +215,20 @@ def create_roadmap_form(request):
 def class_detail_view(request):
     # List class details and verify that user has authority to access this class id
     return redirect('dashboard')
+
+
+@login_required(login_url='login')
+def account_detail_view(request):
+    # Display account type and details
+    user = AppUser.objects.get(id=request.session['user_id'])
+
+    username = user.username
+    user_type = user.role.title()
+    full_name = f"{user.first_name} {user.last_name}"
+    email = user.email
+    date_joined = user.date_joined
+
+    return render(request, "roadmaps/pages/account_details.html", {"username": username, "user_type": user_type, "full_name": full_name, "email": email, "date_joined": date_joined, "student": user_type=="Student"})
 
 
 

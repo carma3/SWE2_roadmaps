@@ -17,15 +17,24 @@
         <div class="sidebar">
             <h2>Dashboard</h2>
             <ul>
-                <li><a href="#">Home</a></li>
+                <li><a href="{% url 'dashboard' %}">Home</a></li>
                 <li><a href="#">Classes</a></li>
                 <li><a href="#">Roadmaps</a></li>
-                <li><a href="#">Account</a></li>
+                <li><a href="{% url 'account' %}">Account</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
 
             <!-- Join a Class Section -->
-            <div></div>
+            <div class="join-class">
+                {% if student %}
+                    <h3>Join a Class</h3>
+                    <form method="POST" action="{% url 'join_class' %}">
+                        {% csrf_token %}
+                        <input type="text" name="join_code" placeholder="Enter Code" required>
+                        <button type="submit">Join</button>
+                    </form>
+                {% endif %}
+            </div>
         </div>
 
         <!-- Main Dashboard Content -->
