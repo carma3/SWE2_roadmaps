@@ -22,20 +22,30 @@
     <textarea name="roadmap_description" id="roadmap_description" required></textarea>
 
     {% if class_instance %}
-    <h2>Students in {{ class_instance.class_name }}</h2>
+    <h2>Students in {{ class_instance.class_name }}:</h2>
         {% csrf_token %}
-
-        <ul>
+    
+        <h3>Assign Students to Groups</h3>
+        <table>
+            <tr>
+                <th>Student Name</th>
+                <th>Group Number</th>
+            </tr>
             {% for student in students %}
-            <li>
-                <input type="checkbox" name="selected_students" value="{{ student.id }}">
-                {{ student.username }}
-            </li>
+            <tr>
+                <td>{{ student.username }}</td>
+                <td>
+                    <input type="number" name="group_{{ student.id }}" min="1" required>
+                </td>
+            </tr>
             {% empty %}
-            <li>No students enrolled.</li>
+            <tr>
+                <td colspan="2">No students enrolled.</td>
+            </tr>
             {% endfor %}
-        </ul>
+        </table>
     {% endif %}
+
 
 
 

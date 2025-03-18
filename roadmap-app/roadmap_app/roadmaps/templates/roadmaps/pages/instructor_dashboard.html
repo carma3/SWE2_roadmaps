@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <h2>Dashboard</h2>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Classes</a></li>
+                <li><a href="#">Roadmaps</a></li>
+                <li><a href="#">Account</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+
+            <!-- Join a Class Section -->
+            <div></div>
+        </div>
+
+        <!-- Main Dashboard Content -->
+        <div class="main-content">
+            <h1>Your Courses</h1>
+            <div class="course-grid">
+                {% for class_instance in classes %}
+                <a href="{% url 'class_detail' class_instance.id %}" class="course-card">
+                    <h2>{{ class_instance.class_name }}</h2>
+                    <p>Instructor: {{ class_instance.class_instructor.username }}</p>
+                </a>
+                {% empty %}
+                <p>No classes available.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

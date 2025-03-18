@@ -26,7 +26,9 @@ urlpatterns = [
     path("pages/dashboard", views.dashboard, name="dashboard"),
     path("pages/logout", views.logout_view, name="logout"),
     path("pages/dashboard/create-class", views.create_class_view, name="create_class"),
-    path("pages/dashboard/create-roadmap", views.create_roadmap_form, name="create_roadmap")
+    path("pages/dashboard/create-roadmap", views.create_roadmap_form, name="create_roadmap"),
+    path("pages/dashboard/join-class", views.join_class_view, name="join_class"),
+    path('class/<int:class_id>/', views.class_detail_view, name='class_detail'),
 ]
 
 # Path syntax: path(URL route pattern (not necessarily path within templates, just url to follow in browser to get to view), 
