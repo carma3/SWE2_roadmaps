@@ -61,6 +61,7 @@ class Roadmap(models.Model):
 
 class Task(models.Model):
     TASK_STATUS_CHOICES = (
+        ('not_started', 'Not Started'),
         ('pending', 'Pending'),
         ('in_progress', 'In Progress'),
         ('completed', 'Completed'),
