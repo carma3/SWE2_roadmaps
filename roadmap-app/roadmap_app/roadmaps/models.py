@@ -37,9 +37,9 @@ class Class(models.Model):
 
 
 # TODO: Link project and roadmap together with foreign key
-# TODO: Add description to project model
 class Project(models.Model):
     project_title = models.CharField(max_length=25)
+    project_description = models.TextField(blank=True, null=True)
     project_instructor = models.ForeignKey(AppUser, on_delete=models.DO_NOTHING)
     class_id = models.ManyToManyField(Class) # Many projects linked to many classes
     created_at = models.DateTimeField(auto_now_add=True)
