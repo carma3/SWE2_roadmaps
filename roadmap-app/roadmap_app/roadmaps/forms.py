@@ -10,8 +10,6 @@ class SignUpForm(UserCreationForm):
     last_name = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(required=True)
 
-    # TODO: Change password requirements
-
     class Meta:
         model = AppUser
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'role']
@@ -28,7 +26,6 @@ class CreateClassForm(forms.ModelForm):
 class CreateRoadmapForm(forms.ModelForm):
     roadmap_title = forms.CharField(max_length=30, required=True)
     roadmap_description = forms.CharField(max_length=30, required=True)
-    #roadmap_students = forms.CharField(max_length=30, required=True)
 
     class Meta:
         model = Roadmap

@@ -37,6 +37,7 @@ class Class(models.Model):
 
 
 # TODO: Link project and roadmap together with foreign key
+# TODO: Add description to project model
 class Project(models.Model):
     project_title = models.CharField(max_length=25)
     project_instructor = models.ForeignKey(AppUser, on_delete=models.DO_NOTHING)

@@ -22,28 +22,31 @@
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
 
-            <!-- Join a Class Section -->
             <div class="join-class">
-                {% if student %}
-                <h3>Join a Class</h3>
-                <form method="POST" action="{% url 'join_class' %}">
-                    {% csrf_token %}
-                    <input type="text" name="join_code" placeholder="Enter Code" required>
-                    <button type="submit">Join</button>
-                </form>
-                {% endif %}
             </div>
         </div>
 
+        <!-- Main Dashboard Content -->
         <div class="main-content">
-            <h1>Account Details</h1>
-            <p>Username: {{ username }}</p>
-            <p>Email: {{ email }}</p>
-            <p>Full Name: {{ full_name }}</p>
-            <p>User Type: {{ user_type }}</p>
-            <p>Date Joined: {{ date_joined }}</p>
+            <h1>{{ class_name }}</h1>
+            <h3>{{ class_instructor }}</h3>
 
-
+            {% if not student %}
+                <p>Class Join Code: {{ class_code }}</p>
+            {% endif %}
+            
+            
+            <p>{{ class_desc }}</p>
+            <div class="course-grid">
+                {% for project in projects %}
+                    <a href="{% url 'project_details' project.id %}" class="course-card">
+                        <h2>{{ project.project_title }}</h2>
+                        <p>{{ project.project_description }}</p>
+                    </a>
+                    {% empty %}
+                    <p>No projects listed</p>
+                {% endfor %}
+            </div>
         </div>
 
     </div>

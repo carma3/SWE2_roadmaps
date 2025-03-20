@@ -25,7 +25,6 @@ urlpatterns = [
     path("signup/", views.signup_view, name="signup"),
     path("pages/dashboard", views.dashboard, name="dashboard"),
     path("pages/logout", views.logout_view, name="logout"),
-    path("pages/dashboard/create-class", views.create_class_view, name="create_class"),
     path("pages/dashboard/create-roadmap", views.create_roadmap_form, name="create_roadmap"),
     path("pages/dashboard/join-class", views.join_class_view, name="join_class"),
     path('pages/dashboard/class/<int:class_id>/', views.class_detail_view, name='class_detail'),

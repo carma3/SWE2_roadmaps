@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
-from .models import Roadmap, AppUser, Class
+from .models import Roadmap, AppUser, Class, Project
 from django.contrib.auth.models import User
 import json
 from collections import defaultdict
@@ -100,67 +100,66 @@ def join_class_view(request):
 def dashboard(request):
     # Student view
     if request.session["usertype"] == "student":
-        return render(request, 'roadmaps/pages/dashboard.html', {"username": request.session['username'], "classes" : Class.objects.filter(), "student": True})
+        if request.method == "POST":
+            pass
+
+
+
+        return render(request, 'roadmaps/pages/dashboard.html', {"username": request.session['username'], 
+                                                                 "classes" : AppUser.objects.get(id=request.session['user_id']).student_classes.all(), 
+                                                                 "student": True})
 
     
     # Instructor view
     elif request.session["usertype"] == "instructor":
-        return render(request, 'roadmaps/pages/dashboard.html', {"username": request.session['username'], "classes" : Class.objects.filter(class_instructor=AppUser.objects.get(id=request.session['user_id'])), "student": False})
+        if request.method == "POST":
+            def get_unique_code():
+                code = None
+                
+                while code == None:
+                    characters = string.ascii_letters + string.digits
+                    code = ''.join(random.choices(characters, k=5))
+
+                    _class = Class.objects.filter(class_join_code=code)
+
+                    if _class:
+                        code == None
+
+                return code
+                
+
+            form = CreateClassForm(request.POST)
+
+            if form.is_valid():                
+                class_code = get_unique_code()
+
+                class_name = form.cleaned_data['class_name']
+                class_desc = form.cleaned_data['class_desc']
+
+                new_class = Class (
+                    class_name=class_name,
+                    class_desc=class_desc,
+                    class_instructor=AppUser.objects.get(id=request.session['user_id']),
+                    class_join_code=class_code
+                )
+
+                new_class.save()
+
+                messages.success(request, "Class Creation Successful!")
+                
+                # Refresh the page with the new class
+                return redirect('dashboard')
+            
+
+        else:
+            form = CreateClassForm()
 
 
+        return render(request, 'roadmaps/pages/dashboard.html', {"username": request.session['username'], 
+                                                                 "classes" : Class.objects.filter(class_instructor=AppUser.objects.get(id=request.session['user_id'])), 
+                                                                 "student": False, "create_class_form": form})
 
 
-
-
-
-@login_required(login_url='login')
-def create_class_view(request):
-    if request.session["usertype"] == "student":
-        return redirect("dashboard")
-
-    def get_unique_code():
-        code = None
-        
-        while code == None:
-            characters = string.ascii_letters + string.digits
-            code = ''.join(random.choices(characters, k=5))
-
-            _class = Class.objects.filter(class_join_code=code)
-
-            if _class:
-                code == None
-
-        return code
-
-
-    if request.method == "POST":
-        form = CreateClassForm(request.POST)
-
-        if form.is_valid():
-            class_code = get_unique_code()
-
-            class_name = form.cleaned_data['class_name']
-            class_desc = form.cleaned_data['class_desc']
-
-            new_class = Class (
-                class_name=class_name,
-                class_desc=class_desc,
-                class_instructor=AppUser.objects.filter(username=request.session['username'])[0],
-                class_join_code=class_code
-            )
-
-            new_class.save()
-
-            messages.success(request, f"Class created successfully. Class code: {class_code}")
-
-
-            return render(request, "roadmaps/pages/create_class.html", {"form":form})
-        
-    else:
-        form = CreateClassForm()
-
-
-    return render(request, "roadmaps/pages/create_class.html", {"form":form})
 
 
 # Create roadmap page
@@ -212,9 +211,31 @@ def create_roadmap_form(request):
 
 
 @login_required(login_url='login')
-def class_detail_view(request):
+def class_detail_view(request, class_id):
     # List class details and verify that user has authority to access this class id
-    return redirect('dashboard')
+    selected_class = Class.objects.get(id=class_id)
+
+    # Validate authorization to view this class
+    if request.session['usertype'] == "student":
+        # If student, verify that they are in this class
+        students = selected_class.class_student
+        print(students, type(students))
+
+    elif request.session['usertype'] == "instructor":
+        # If instructor, verify that they own this class
+        if selected_class.class_instructor.id != request.session['user_id']:
+            return redirect('dashboard')
+
+    class_name = selected_class.class_name
+    class_desc = selected_class.class_desc
+    class_instructor = selected_class.class_instructor
+    class_code = selected_class.class_join_code
+
+    projects = Project.objects.filter(class_id=class_id)
+
+
+    return render(request, "roadmaps/pages/class_details.html", {"projects": projects, "class_name": class_name,
+                  "class_desc": class_desc, "class_instructor": class_instructor, "class_code": class_code, "student": request.session['usertype'] == "student"})
 
 
 @login_required(login_url='login')
