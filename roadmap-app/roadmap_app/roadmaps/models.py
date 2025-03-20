@@ -59,6 +59,32 @@ class Roadmap(models.Model):
     def __str__(self):
         return self.roadmap_title
 
+class Task(models.Model):
+    TASK_STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+    )
+
+    # Link each task to a Roadmap
+    task_roadmap = models.ForeignKey('Roadmap', on_delete=models.CASCADE, related_name="tasks")
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    status = models.CharField(max_length=20, choices=TASK_STATUS_CHOICES, default='pending')
+    # Use a ForeignKey to connect the task to a category 
+    category = models.ForeignKey(TaskCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name="tasks")
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    def __str__(self):
+        return self.name
+
+class TaskCategory(models.Model):
+    # A unique name for each category.
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
 
 class Attachment(models.Model):
     attachment_roadmap = models.ForeignKey(Roadmap, on_delete=models.DO_NOTHING) # One roadmap has many attachments
