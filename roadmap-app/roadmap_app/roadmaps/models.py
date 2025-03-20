@@ -59,7 +59,16 @@ class Roadmap(models.Model):
     def __str__(self):
         return self.roadmap_title
 
+# I moved this up here since it needs to be defined before being used in Task
+class TaskCategory(models.Model):
+    # A unique name for each category.
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Task(models.Model):
+    # Good idea having specific choices. When would a task be in the pending state?
     TASK_STATUS_CHOICES = (
         ('not_started', 'Not Started'),
         ('pending', 'Pending'),
@@ -68,24 +77,26 @@ class Task(models.Model):
     )
 
     # Link each task to a Roadmap
-    task_roadmap = models.ForeignKey('Roadmap', on_delete=models.CASCADE, related_name="tasks")
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+    # I changed the first argument to be the roadmap class, rather than a string
+    task_roadmap = models.ForeignKey(Roadmap, on_delete=models.CASCADE, related_name="tasks")
+    task_name = models.CharField(max_length=100)
+    task_description = models.TextField()
     status = models.CharField(max_length=20, choices=TASK_STATUS_CHOICES, default='pending')
     # Use a ForeignKey to connect the task to a category 
-    category = models.ForeignKey(TaskCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name="tasks")
+    category = models.ForeignKey(TaskCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name="task_cat")
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
     def __str__(self):
-        return self.name
+        return self.task_name
+    
 
-class TaskCategory(models.Model):
-    # A unique name for each category.
-    name = models.CharField(max_length=50, unique=True)
-
-    def __str__(self):
-        return self.name
+"""
+Good changes, just make sure to run manage.py makemigrations and manage.py migrate
+so that the changes take effect in the DB. If you want to throw together an html page
+and a view to create and update a task that would be good to get an idea of how it works
+"""
+    
 
 class Attachment(models.Model):
     attachment_roadmap = models.ForeignKey(Roadmap, on_delete=models.DO_NOTHING) # One roadmap has many attachments
