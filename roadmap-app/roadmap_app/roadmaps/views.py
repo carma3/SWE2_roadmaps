@@ -11,6 +11,8 @@ from django.contrib import messages
 from .forms import SignUpForm, CreateClassForm
 from django.contrib.auth.decorators import login_required
 
+# Comment
+
 def home(request):
     return render(request, 'roadmaps/home.html')
 
