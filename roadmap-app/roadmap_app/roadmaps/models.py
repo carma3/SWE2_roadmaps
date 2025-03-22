@@ -1,3 +1,5 @@
+import random
+import string
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -24,6 +26,14 @@ class Ticket(models.Model):
         return self.ticket_title
 
 
+def generate_unique_code():
+    # Generate a unique 5-character alphanumeric join code 
+    while True:
+        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+        if not Class.objects.filter(class_join_code=code).exists():
+            return code
+
+
 class Class(models.Model):
     class_name = models.CharField(max_length=25)
     class_desc = models.TextField(max_length=300, default="")
@@ -31,6 +41,11 @@ class Class(models.Model):
     class_student = models.ManyToManyField(AppUser, related_name="student_classes") # N students can be a part of M classes
     class_join_code = models.CharField(unique=True, max_length=5, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def regenerate_code(self):
+        # Allows an instructor to regenerate the class join code, IF NEEDED TO DO SO 
+        self.class_join_code = generate_unique_code()
+        self.save()
 
     def __str__(self):
         return self.class_name
