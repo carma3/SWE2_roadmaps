@@ -77,7 +77,7 @@ def join_class_view(request):
     
     # Redirect if not a student
     if request.session["usertype"] != "student":
-        redirect('dashboard')
+        return redirect('dashboard')
 
     if request.method == 'POST':
         # Get class code and match against database, if possible
