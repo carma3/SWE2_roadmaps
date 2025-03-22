@@ -125,10 +125,6 @@ def dashboard(request):
                 
                 # Refresh the page with the new class
                 return redirect('dashboard')
-                messages.success(request, "Class Creation Successful!")
-                
-                # Refresh the page with the new class
-                return redirect('dashboard')
             
 
         else:
